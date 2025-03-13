@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Проста 3D-гра</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Ініціалізація сцени
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Світло
+        const light = new THREE.PointLight(0xffffff, 1, 100);
+        light.position.set(10, 10, 10);
+        scene.add(light);
+
+        // Створення куба (блоку)
+        const geometry = new THREE.BoxGeometry();
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+
+        // Розташування камери
+        camera.position.z = 5;
+
+        // Переміщення гравця
+        let playerSpeed = 0.1;
+        let playerMoveX = 0;
+        let playerMoveZ = 0;
+
+        // Обробка клавіатурних подій
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'a') playerMoveX = -playerSpeed;
+            if (event.key === 'd') playerMoveX = playerSpeed;
+            if (event.key === 'w') playerMoveZ = -playerSpeed;
+            if (event.key === 's') playerMoveZ = playerSpeed;
+        });
+
+        document.addEventListener('keyup', (event) => {
+            if (event.key === 'a' || event.key === 'd') playerMoveX = 0;
+            if (event.key === 'w' || event.key === 's') playerMoveZ = 0;
+        });
+
+        // Анімація і оновлення сцени
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Рух гравця
+            camera.position.x += playerMoveX;
+            camera.position.z += playerMoveZ;
+
+            // Оновлення сцени
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Обробка зміни розміру вікна
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+    </script>
+</body>
+</html>
