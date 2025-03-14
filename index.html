@@ -1,76 +1,80 @@
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Проста 3D-гра</title>
-    <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { display: block; }
-    </style>
-</head>
-<body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script>
-        // Ініціалізація сцени
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
 
-        // Світло
-        const light = new THREE.PointLight(0xffffff, 1, 100);
-        light.position.set(10, 10, 10);
-        scene.add(light);
+<html>
+<!-- Верстак -->
+<div id="craftingTableUI" class="blockUI">
+    <h2>Верстак</h2>
+    <p>Виберіть предмет для крафту:</p>
 
-        // Створення куба (блоку)
-        const geometry = new THREE.BoxGeometry();
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        const cube = new THREE.Mesh(geometry, material);
-        scene.add(cube);
+    <h3>Блоки</h3>
+    <button onclick="craftItem('wood_planks')">Дошки (4)</button>
+    <button onclick="craftItem('stick')">Палки (4)</button>
 
-        // Розташування камери
-        camera.position.z = 5;
+    <h3>Предмети</h3>
+    <button onclick="craftItem('wooden_pickaxe')">Дерев'яна кирка</button>
+    <button onclick="craftItem('wooden_sword')">Дерев'яний меч</button>
 
-        // Переміщення гравця
-        let playerSpeed = 0.1;
-        let playerMoveX = 0;
-        let playerMoveZ = 0;
+    <button onclick="closeUI('craftingTableUI')">Закрити</button>
+</div>
 
-        // Обробка клавіатурних подій
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'a') playerMoveX = -playerSpeed;
-            if (event.key === 'd') playerMoveX = playerSpeed;
-            if (event.key === 'w') playerMoveZ = -playerSpeed;
-            if (event.key === 's') playerMoveZ = playerSpeed;
-        });
+<!-- Інвентар -->
+<div id="inventoryUI" class="inventory">
+    <h2>Інвентар</h2>
+    
+    <div class="armor">
+        <div id="helmetSlot" class="slot">Ш</div>
+        <div id="chestplateSlot" class="slot">Н</div>
+        <div id="leggingsSlot" class="slot">П</div>
+        <div id="bootsSlot" class="slot">Б</div>
+    </div>
 
-        document.addEventListener('keyup', (event) => {
-            if (event.key === 'a' || event.key === 'd') playerMoveX = 0;
-            if (event.key === 'w' || event.key === 's') playerMoveZ = 0;
-        });
+    <div id="inventoryGrid" class="grid"></div>
 
-        // Анімація і оновлення сцени
-        function animate() {
-            requestAnimationFrame(animate);
+    <div class="second-hand">
+        <h3>Друга рука</h3>
+        <div id="offHandSlot" class="slot">🖐</div>
+    </div>
 
-            // Рух гравця
-            camera.position.x += playerMoveX;
-            camera.position.z += playerMoveZ;
+    <button onclick="closeUI('inventoryUI')">Закрити</button>
+</div>
 
-            // Оновлення сцени
-            renderer.render(scene, camera);
-        }
+<style>
+.inventory {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 20px;
+    border: 2px solid white;
+}
 
-        animate();
+.grid {
+    display: grid;
+    grid-template-columns: repeat(6, 50px);
+    grid-template-rows: repeat(6, 50px);
+    gap: 5px;
+}
 
-        // Обробка зміни розміру вікна
-        window.addEventListener('resize', () => {
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-        });
-    </script>
-</body>
+.slot {
+    width: 50px;
+    height: 50px;
+    background: gray;
+    border: 1px solid white;
+    text-align: center;
+    line-height: 50px;
+    font-size: 20px;
+}
+
+.armor {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.second-hand {
+    margin-top: 10px;
+}
+</style>
 </html>
