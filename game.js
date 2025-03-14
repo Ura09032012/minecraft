@@ -256,4 +256,11 @@ function craftItem(item) {
     console.log(`Крафтимо: ${item}`);
     socket.emit("craftItem", item);
 } 
+            const startButton = document.getElementById('startGame');
+const difficultySelect = document.getElementById('difficulty');
+
+startButton.addEventListener('click', () => {
+    const difficulty = difficultySelect.value;
+    socket.emit('setDifficulty', difficulty);
+});
         }
